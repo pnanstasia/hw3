@@ -1,0 +1,23 @@
+services:
+  web:
+    build:
+      context: ./business
+      dockerfile: Dockerfile
+    image: bs:latest
+    container_name: fastapi_web_server
+    ports:
+      - "8000:8000"
+    environment:
+      MODULE_NAME: "business"
+      VARIABLE_NAME: "app"
+
+  scheduler:
+    build:
+      context: ./scheduler
+      dockerfile: Dockerfile.add
+    image: my-scheduler-app-compose:latest
+    container_name: scheduler
+    environment:
+      TARGET_URL: "http://web:8000/health" 
+    depends_on:
+      - web
